@@ -117,6 +117,10 @@ public class ProcessManager implements Runnable {
         Thread t = threads.get(_name);
         try {
             t.join();
+            modify = true;
+            threads.remove(_name);
+            runnables.remove(_name);
+            modify = false;
         } catch (InterruptedException ex) {
             Logger.getLogger(ProcessManager.class.getName())
                     .log(Level.SEVERE, null, ex);
