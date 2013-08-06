@@ -23,17 +23,7 @@ public class VoiceCapture implements Runnable {
     private List<Mixer> mixers = new ArrayList<>();
 
     public void setup() {
-        System.out.println("Searching for microphones");
-        for (Mixer.Info mixerinfo : AudioSystem.getMixerInfo()) {
-            mixer = AudioSystem.getMixer(mixerinfo);
-            System.out.println("MIXER: " + mixerinfo.toString());
-
-            
-            System.out.println(mixer.getSourceLineInfo());
-            System.out.println(mixer.getTargetLineInfo());
-            
-        }
-        System.out.println();
+        
     }
 
     @Override
