@@ -5,6 +5,10 @@
 package computer;
 
 import com.sun.speech.freetts.VoiceManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,9 +18,11 @@ public class ComputerVoice implements Runnable {
 
     private boolean terminated = false;
     private String name = "VoiceDaemon";
-    private String buffer = null;
+    private List<String> buffer = new ArrayList<>();
     private final static Voice voiceKevin16 = new Voice("kevin16");
     private Boolean spoken = false;
+    private boolean protect = true;
+    private boolean modify;
 
     @Override
     public void run() {
@@ -38,15 +44,22 @@ public class ComputerVoice implements Runnable {
     public void cycle() {
         while (!terminated) {
 
-            try {
-
-                if (buffer != null) {
-                    voiceKevin16.say(buffer);
-                    buffer = null;
-
+            if (!modify) {
+                protect = true;
+                for (String item : buffer) {
+                    System.out.println("SPEAKING: " + item);
+                    voiceKevin16.say(item);
                 }
-            } catch (Exception e) {
+                buffer.clear();
+                protect = false;
             }
+            try {
+                Thread.sleep(150);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ComputerVoice.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
         }
     }
 
@@ -56,11 +69,16 @@ public class ComputerVoice implements Runnable {
     }
 
     public void speak(String text) {
-        if (buffer != null) {
-            buffer = buffer + "\n" + text;
-        } else {
-            buffer = text;
+        while (protect) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ComputerVoice.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        modify = true;
+        buffer.add(text);
+        modify = false;
 
     }
 

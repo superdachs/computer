@@ -22,6 +22,8 @@ public class ProcessManager implements Runnable {
     public Boolean terminate = false;
     private HashMap<String, Thread> threads = new HashMap<>();
     private HashMap<String, Runnable> runnables = new HashMap<>();
+    private Boolean protect = true;
+    private boolean modify;
 
     public void setThreadAndRunnable(Thread t) {
         threads.put(name, t);
@@ -45,20 +47,31 @@ public class ProcessManager implements Runnable {
 
     @Override
     public void cycle() {
-        
+
         while (!terminate) {
-            for (Entry entry : runnables.entrySet()) {
-                String n = (String) entry.getKey();
-                Runnable r = (Runnable) entry.getValue();
-                if (!threads.containsKey(n) && !r.terminated()) {
-                    startThread(n);
+
+            if (!modify) {
+                protect = true;
+                for (Entry entry : runnables.entrySet()) {
+                    String n = (String) entry.getKey();
+                    Runnable r = (Runnable) entry.getValue();
+                    if (!threads.containsKey(n) && !r.terminated()) {
+                        startThread(n);
+                    }
+                    if (threads.containsKey(n) && r.terminated()) {
+                        stopThread(n);
+                    }
                 }
-                if (threads.containsKey(n) && r.terminated()) {
-                    stopThread(n);
-                }
+                protect = false;
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProcessManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
-        
+
     }
 
     public List<String> getRunningThreads() {
@@ -75,7 +88,19 @@ public class ProcessManager implements Runnable {
     }
 
     public void addThread(Runnable _runnable) {
+
+        System.out.println("adding new runnable: " + _runnable.getName());
+
+        while (protect) {
+            System.out.println("busy...");
+        }
+
+        modify = true;
         runnables.put(_runnable.getName(), _runnable);
+        modify = false;
+
+
+        System.out.println(_runnable.getName() + " added!");
 
     }
 

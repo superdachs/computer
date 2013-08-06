@@ -22,8 +22,12 @@ public class Computer {
 
         ComputerVoice voice = new ComputerVoice();
         processManager.addThread(voice);
+        TestClass testClass = new TestClass();
+        testClass.name = "test";
+        processManager.addThread(testClass);
+        voice.speak("Hello World!");
+        voice.speak("How are you?");
+        voice.speak("My name is computer!");
         
-        //voice.speak("Hello World!");
-
     }
 }
