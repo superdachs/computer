@@ -21,10 +21,9 @@ public class Computer {
         processManagerThread.start();
 
         ComputerVoice voice = new ComputerVoice();
-
         processManager.addThread(voice);
         
-        voice.speak("Hello World!");
+        //voice.speak("Hello World!");
 
     }
 }

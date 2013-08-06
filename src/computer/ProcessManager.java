@@ -22,7 +22,6 @@ public class ProcessManager implements Runnable {
     public Boolean terminate = false;
     private HashMap<String, Thread> threads = new HashMap<>();
     private HashMap<String, Runnable> runnables = new HashMap<>();
-    public int addedThreads = 0;
 
     public void setThreadAndRunnable(Thread t) {
         threads.put(name, t);
@@ -31,7 +30,6 @@ public class ProcessManager implements Runnable {
 
     @Override
     public void run() {
-        addedThreads++;
         cycle();
     }
 
@@ -47,6 +45,7 @@ public class ProcessManager implements Runnable {
 
     @Override
     public void cycle() {
+        
         while (!terminate) {
             for (Entry entry : runnables.entrySet()) {
                 String n = (String) entry.getKey();
@@ -59,6 +58,7 @@ public class ProcessManager implements Runnable {
                 }
             }
         }
+        
     }
 
     public List<String> getRunningThreads() {
@@ -76,7 +76,6 @@ public class ProcessManager implements Runnable {
 
     public void addThread(Runnable _runnable) {
         runnables.put(_runnable.getName(), _runnable);
-        addedThreads++;
 
     }
 
@@ -93,7 +92,6 @@ public class ProcessManager implements Runnable {
         Thread t = threads.get(_name);
         try {
             t.join();
-            addedThreads--;
         } catch (InterruptedException ex) {
             Logger.getLogger(ProcessManager.class.getName())
                     .log(Level.SEVERE, null, ex);
