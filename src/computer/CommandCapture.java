@@ -20,8 +20,12 @@ import javax.sound.sampled.Port;
  *
  * @author stk
  */
-public class VoiceCapture implements Runnable {
+public class CommandCapture implements Runnable {
 
+    List<CommandListener> commandListeners = new ArrayList<>();
+    List<String> commands = new ArrayList<>();
+    
+    
     public String name = "VoiceCaptureDaemon";
     private boolean terminated = false;
     private Mixer mixer;
@@ -29,10 +33,30 @@ public class VoiceCapture implements Runnable {
     
     private FlacRecorder recorder = new FlacRecorder();
     private GoogleSpeechAPIConverter converter = new GoogleSpeechAPIConverter();
+    private boolean modify;
+    private boolean protect;
 
     public void setup() {
     }
 
+    public void addCommandListener(CommandListener l) {
+        commandListeners.add(l);
+    }
+    
+    public void addCommand(String c) {
+        
+        while(protect) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        modify = true;
+        commands.add(c);
+        modify = false;
+    }
+    
     @Override
     public void run() {
 
@@ -55,17 +79,30 @@ public class VoiceCapture implements Runnable {
             try {
                 String[] firstCommand = converter.convert(recorder.record(2000));
                 if (firstCommand != null) {
-                    if (firstCommand[0].equals("Computer")) {
-                        System.out.println("Communication detected!");
+                    while(modify) {
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                    protect = true;
+                    for(String command : commands) {
+                    if (firstCommand[0].equals(command)) {
+                        for(CommandListener l : commandListeners) {
+                            l.commandRecognized(command);
+                        }
+                    }
+                    }
+                    protect = false;
                 }
             } catch (IOException ex) {
-                Logger.getLogger(VoiceCapture.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(VoiceCapture.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -76,3 +113,4 @@ public class VoiceCapture implements Runnable {
         return name;
     }
 }
+
