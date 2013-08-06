@@ -24,15 +24,16 @@ public class GoogleSpeechAPIConverter {
     public GoogleSpeechAPIConverter() {
     }
 
-    public String convert(File file) throws IOException {
+    public String[] convert(File file) throws IOException {
 
         Path path = Paths.get(file.getAbsolutePath());
         byte[] data = Files.readAllBytes(path);
 
         String request = "https://www.google.com/"
                 + "speech-api/v1/recognize?"
-                + "xjerr=1&client=speech2text&lang=en-US&maxresults=10";
+                + "xjerr=1&client=speech2text&lang=de-DE&maxresults=1";
 
+        System.out.println("ANALYSIS STARTED");
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
@@ -50,16 +51,26 @@ public class GoogleSpeechAPIConverter {
         wr.close();
         connection.disconnect();
 
-        System.out.println("Done");
-
+        System.out.println("ANALYSIS STOPPED");
+        
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                 connection.getInputStream()));
         String decodedString;
+        String responseString = "";
         while ((decodedString = in.readLine()) != null) {
-            System.out.println(decodedString);
+            responseString += decodedString;
         }
-
-        return decodedString;
+        
+        return parse(responseString);
+    }
+    
+    private String[] parse(String in) {
+        
+        String[] resp = in.split("utterance\":\"");
+        resp = resp[1].split("\",\"confidence");
+        String[] response = resp[0].split(" ");
+        
+        return response;
     }
 }

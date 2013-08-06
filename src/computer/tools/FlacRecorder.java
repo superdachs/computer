@@ -26,7 +26,7 @@ import javax.sound.sampled.TargetDataLine;
  */
 public class FlacRecorder {
 
-    AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 16, 2, 4, 44100.0F, false);
+    AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, /*44100.0F*/16000, 16, 2, 4, /*44100.0F*/16000, false);
     DataLine.Info info = new DataLine.Info(
             TargetDataLine.class, format);
     TargetDataLine targetLine;
@@ -51,11 +51,12 @@ public class FlacRecorder {
         targetLine.start();
 
         Long startTime = new Date().getTime();
-
+        System.out.println("RECORD STARTED");
         while (new Date().getTime() < (startTime + milliseconds + 1000)) {
             numBytesRead = targetLine.read(data, 0, data.length);
             out.write(data, 0, numBytesRead);
         }
+        System.out.println("RECORD STOPPED");
         File wavFile = new File("speech" + new Date().getTime() + ".wav");
         ByteArrayInputStream bais = new ByteArrayInputStream(out.toByteArray());
         AudioInputStream ais = new AudioInputStream(bais, format, out.size());
