@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javaFlacEncoder.FLAC_FileEncoder;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -58,18 +59,25 @@ public class SoundTest {
             }
             System.out.println("stop record...");
 
-            File fileOut = new File("speech" + new Date().getTime() + ".wav");
+            File wavFile = new File("speech" + new Date().getTime() + ".wav");
             ByteArrayInputStream bais = new ByteArrayInputStream(out.toByteArray());
             AudioInputStream ais = new AudioInputStream(bais, format, out.size());
 
             if (AudioSystem.isFileTypeSupported(AudioFileFormat.Type.WAVE, ais)) {
-                AudioSystem.write(ais, AudioFileFormat.Type.WAVE, fileOut);
+                AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
             }
             targetLine.stop();
 
             ais.close();
 
-
+            FLAC_FileEncoder flacEncoder = new FLAC_FileEncoder();
+            File flacFile = new File("speech.flac");
+            
+            if(flacFile.exists()) {
+                flacFile.delete();
+            }
+            
+            flacEncoder.encode(wavFile, flacFile);
 
         } catch (LineUnavailableException ex) {
             Logger.getLogger(SoundTest.class.getName()).log(Level.SEVERE, null, ex);

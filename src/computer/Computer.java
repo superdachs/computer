@@ -42,7 +42,7 @@ public class Computer {
 //        }
 //        System.out.println();
         
-        SoundTest test = new SoundTest();
+        SoundTest2 test = new SoundTest2();
         
     }
 }
