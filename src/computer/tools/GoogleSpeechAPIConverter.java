@@ -52,7 +52,7 @@ public class GoogleSpeechAPIConverter {
         connection.disconnect();
 
         System.out.println("ANALYSIS STOPPED");
-        
+
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(
                 connection.getInputStream()));
@@ -61,16 +61,21 @@ public class GoogleSpeechAPIConverter {
         while ((decodedString = in.readLine()) != null) {
             responseString += decodedString;
         }
-        
+
         return parse(responseString);
     }
-    
+
     private String[] parse(String in) {
-        
+
+        String[] response = null;
+
         String[] resp = in.split("utterance\":\"");
-        resp = resp[1].split("\",\"confidence");
-        String[] response = resp[0].split(" ");
-        
+        if (resp.length > 1) {
+            resp = resp[1].split("\",\"confidence");
+            response = resp[0].split(" ");
+        } else {
+            response = null;
+        }
         return response;
     }
 }

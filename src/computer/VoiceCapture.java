@@ -4,8 +4,13 @@
  */
 package computer;
 
+import computer.tools.FlacRecorder;
+import computer.tools.GoogleSpeechAPIConverter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
@@ -21,16 +26,15 @@ public class VoiceCapture implements Runnable {
     private boolean terminated = false;
     private Mixer mixer;
     private List<Mixer> mixers = new ArrayList<>();
+    
+    private FlacRecorder recorder = new FlacRecorder();
+    private GoogleSpeechAPIConverter converter = new GoogleSpeechAPIConverter();
 
     public void setup() {
-        
     }
 
     @Override
     public void run() {
-
-
-
 
         cycle();
     }
@@ -48,7 +52,22 @@ public class VoiceCapture implements Runnable {
     @Override
     public void cycle() {
         while (!terminated()) {
-            //call event when audio is captured!
+            try {
+                String[] firstCommand = converter.convert(recorder.record(2000));
+                if (firstCommand != null) {
+                    if (firstCommand[0].equals("Computer")) {
+                        System.out.println("Communication detected!");
+                    }
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(VoiceCapture.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(VoiceCapture.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
     }
 
