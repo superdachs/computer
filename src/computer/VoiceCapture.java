@@ -4,6 +4,13 @@
  */
 package computer;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.Mixer;
+import javax.sound.sampled.Port;
+
 /**
  *
  * @author stk
@@ -12,9 +19,29 @@ public class VoiceCapture implements Runnable {
 
     public String name = "VoiceCaptureDaemon";
     private boolean terminated = false;
-    
+    private Mixer mixer;
+    private List<Mixer> mixers = new ArrayList<>();
+
+    public void setup() {
+        System.out.println("Searching for microphones");
+        for (Mixer.Info mixerinfo : AudioSystem.getMixerInfo()) {
+            mixer = AudioSystem.getMixer(mixerinfo);
+            System.out.println("MIXER: " + mixerinfo.toString());
+
+            
+            System.out.println(mixer.getSourceLineInfo());
+            System.out.println(mixer.getTargetLineInfo());
+            
+        }
+        System.out.println();
+    }
+
     @Override
     public void run() {
+
+
+
+
         cycle();
     }
 
@@ -30,8 +57,8 @@ public class VoiceCapture implements Runnable {
 
     @Override
     public void cycle() {
-        while(!terminated()) {
-            
+        while (!terminated()) {
+            //call event when audio is captured!
         }
     }
 
@@ -39,5 +66,4 @@ public class VoiceCapture implements Runnable {
     public String getName() {
         return name;
     }
-    
 }
