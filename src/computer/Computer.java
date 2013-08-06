@@ -22,12 +22,17 @@ public class Computer {
 
         ComputerVoice voice = new ComputerVoice();
         processManager.addThread(voice);
-        TestClass testClass = new TestClass();
-        testClass.name = "test";
-        processManager.addThread(testClass);
         voice.speak("Hello World!");
         voice.speak("How are you?");
         voice.speak("My name is computer!");
-        
+
+        VoiceCapture voiceCapture = new VoiceCapture();
+        processManager.addThread(voiceCapture);
+
+        System.out.println("Computer started.");
+        System.out.println("Running Threads:");
+        for (int i = 0; i < processManager.getRunningThreads().size(); i++) {
+            System.out.println(i + " - " + processManager.getRunningThreads().get(i));
+        }
     }
 }

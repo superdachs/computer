@@ -8,14 +8,13 @@ package computer;
  *
  * @author stk
  */
-public class TestClass implements Runnable {
+public class VoiceCapture implements Runnable {
 
-    public String name = "";
+    public String name = "VoiceCaptureDaemon";
     private boolean terminated = false;
     
     @Override
     public void run() {
-        System.out.println("Process " + name + " running!");
         cycle();
     }
 
