@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author stk
  */
-public class ComputerVoice implements Runnable {
+public class TextToSpeechDaemon implements Runnable {
 
     private boolean terminated = false;
     private String name = "VoiceDaemon";
@@ -56,7 +56,7 @@ public class ComputerVoice implements Runnable {
             try {
                 Thread.sleep(150);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ComputerVoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TextToSpeechDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
 
 
@@ -73,7 +73,7 @@ public class ComputerVoice implements Runnable {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ComputerVoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TextToSpeechDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         modify = true;

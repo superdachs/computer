@@ -4,7 +4,7 @@
  */
 package computer;
 
-import computer.tools.FlacRecorder;
+import computer.tools.FlacAudioRecorder;
 import computer.tools.GoogleSpeechAPIConverter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import javax.sound.sampled.Port;
  *
  * @author stk
  */
-public class CommandCapture implements Runnable {
+public class CommandRecognitionDaemon implements Runnable {
 
-    List<CommandListener> commandListeners = new ArrayList<>();
+    List<CommandRecognitionListener> commandListeners = new ArrayList<>();
     List<String> commands = new ArrayList<>();
     
     
@@ -31,7 +31,7 @@ public class CommandCapture implements Runnable {
     private Mixer mixer;
     private List<Mixer> mixers = new ArrayList<>();
     
-    private FlacRecorder recorder = new FlacRecorder();
+    private FlacAudioRecorder recorder = new FlacAudioRecorder();
     private GoogleSpeechAPIConverter converter = new GoogleSpeechAPIConverter();
     private boolean modify;
     private boolean protect;
@@ -39,7 +39,7 @@ public class CommandCapture implements Runnable {
     public void setup() {
     }
 
-    public void addCommandListener(CommandListener l) {
+    public void addCommandListener(CommandRecognitionListener l) {
         commandListeners.add(l);
     }
     
@@ -49,7 +49,7 @@ public class CommandCapture implements Runnable {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         modify = true;
@@ -83,13 +83,13 @@ public class CommandCapture implements Runnable {
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     protect = true;
                     for(String command : commands) {
                     if (firstCommand[0].equals(command)) {
-                        for(CommandListener l : commandListeners) {
+                        for(CommandRecognitionListener l : commandListeners) {
                             l.commandRecognized(command);
                         }
                     }
@@ -97,12 +97,12 @@ public class CommandCapture implements Runnable {
                     protect = false;
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandCapture.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

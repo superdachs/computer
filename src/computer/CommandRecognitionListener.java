@@ -8,6 +8,6 @@ package computer;
  *
  * @author stk
  */
-public interface CommandListener {
+public interface CommandRecognitionListener {
     public void commandRecognized(String command);
 }

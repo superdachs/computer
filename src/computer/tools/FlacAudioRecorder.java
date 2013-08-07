@@ -24,20 +24,20 @@ import javax.sound.sampled.TargetDataLine;
  *
  * @author stk
  */
-public class FlacRecorder {
+public class FlacAudioRecorder {
 
     AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, /*44100.0F*/16000, 16, 2, 4, /*44100.0F*/16000, false);
     DataLine.Info info = new DataLine.Info(
             TargetDataLine.class, format);
     TargetDataLine targetLine;
 
-    public FlacRecorder() {
+    public FlacAudioRecorder() {
         try {
             targetLine = (TargetDataLine) AudioSystem.getLine(info);
             targetLine.open(format);
 
         } catch (LineUnavailableException ex) {
-            Logger.getLogger(FlacRecorder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FlacAudioRecorder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -65,14 +65,14 @@ public class FlacRecorder {
             try {
                 AudioSystem.write(ais, AudioFileFormat.Type.WAVE, wavFile);
             } catch (IOException ex) {
-                Logger.getLogger(FlacRecorder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FlacAudioRecorder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         targetLine.stop();
         try {
             ais.close();
         } catch (IOException ex) {
-            Logger.getLogger(FlacRecorder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FlacAudioRecorder.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         FLAC_FileEncoder flacEncoder = new FLAC_FileEncoder();
