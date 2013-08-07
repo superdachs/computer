@@ -17,7 +17,7 @@ import javax.sound.sampled.Mixer;
  *
  * @author stk
  */
-public class CommandRecognitionDaemon implements Runnable {
+public class VoiceControlDaemon implements Runnable {
 
     List<CommandRecognitionListener> commandListeners = new ArrayList<>();
     List<String> commands = new ArrayList<>();
@@ -28,6 +28,7 @@ public class CommandRecognitionDaemon implements Runnable {
     private FlacAudioRecorder recorder = new FlacAudioRecorder();
     private GoogleSpeechAPIConverter converter = new GoogleSpeechAPIConverter();
     private boolean protect;
+    private boolean recording;
 
     public void setup() {
     }
@@ -42,7 +43,7 @@ public class CommandRecognitionDaemon implements Runnable {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         protect = true;
@@ -70,13 +71,22 @@ public class CommandRecognitionDaemon implements Runnable {
     public void cycle() {
         while (!terminated()) {
             try {
+                while(recording) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                recording = true;
                 String[] firstCommand = converter.convert(recorder.record(2000));
+                recording = false;
                 if (firstCommand != null) {
                     while (protect) {
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     protect = true;
@@ -90,12 +100,12 @@ public class CommandRecognitionDaemon implements Runnable {
                     protect = false;
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
@@ -104,5 +114,24 @@ public class CommandRecognitionDaemon implements Runnable {
     @Override
     public String getName() {
         return name;
+    }
+    
+    public String[] getSentence() {
+        while(recording) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        recording = true;
+        String[] response = null;
+        try {
+            response = converter.convert(recorder.record(10000));
+        } catch (IOException ex) {
+            Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        recording = false;
+        return response;
     }
 }

@@ -22,7 +22,7 @@ public class Computer {
         processManagerThread.start();
 
         //init voice capturing daemon
-        CommandRecognitionDaemon voiceCapture = new CommandRecognitionDaemon();
+        VoiceControlDaemon voiceCapture = new VoiceControlDaemon();
         voiceCapture.setup();
         voiceCapture.addCommand("Computer");
         processManager.addThread(voiceCapture);
@@ -31,8 +31,14 @@ public class Computer {
             @Override
             public void commandRecognized(String command) {
                 System.out.println("Command: " + command + " recognized by Main Thread!");
+//                switch (command) {
+//                    case "Computer": 
+//                        ;
+//                }
             }
         });
+
+
 
         //init text to speech daemon
         TextToSpeechDaemon voice = new TextToSpeechDaemon();
@@ -52,5 +58,9 @@ public class Computer {
 
 
 
+    }
+
+    public void initCommunication() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
