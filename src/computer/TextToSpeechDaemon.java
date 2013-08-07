@@ -20,10 +20,8 @@ public class TextToSpeechDaemon implements Runnable {
     private String name = "VoiceDaemon";
     private List<String> buffer = new ArrayList<>();
     private final static Voice voiceKevin16 = new Voice("kevin16");
-    private Boolean spoken = false;
     private boolean protect = true;
-    private boolean modify;
-
+    
     @Override
     public void run() {
         cycle();
@@ -44,7 +42,7 @@ public class TextToSpeechDaemon implements Runnable {
     public void cycle() {
         while (!terminated) {
 
-            if (!modify) {
+            if (!protect) {
                 protect = true;
                 for (String item : buffer) {
                     System.out.println("SPEAKING: " + item);
@@ -76,9 +74,9 @@ public class TextToSpeechDaemon implements Runnable {
                 Logger.getLogger(TextToSpeechDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        modify = true;
+        protect = true;
         buffer.add(text);
-        modify = false;
+        protect = false;
 
     }
 

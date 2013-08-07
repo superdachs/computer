@@ -23,8 +23,7 @@ public class ProcessManager implements Runnable {
     private HashMap<String, Thread> threads = new HashMap<>();
     private HashMap<String, Runnable> runnables = new HashMap<>();
     private Boolean protect = true;
-    private boolean modify;
-
+    
     public void setThreadAndRunnable(Thread t) {
         threads.put(name, t);
         runnables.put(name, this);
@@ -50,7 +49,7 @@ public class ProcessManager implements Runnable {
 
         while (!terminate) {
 
-            if (!modify) {
+            if (!protect) {
                 protect = true;
                 for (Entry entry : runnables.entrySet()) {
                     String n = (String) entry.getKey();
@@ -95,9 +94,9 @@ public class ProcessManager implements Runnable {
             System.out.println("busy...");
         }
 
-        modify = true;
+        protect = true;
         runnables.put(_runnable.getName(), _runnable);
-        modify = false;
+        protect = false;
 
 
         System.out.println(_runnable.getName() + " added!");
@@ -117,10 +116,10 @@ public class ProcessManager implements Runnable {
         Thread t = threads.get(_name);
         try {
             t.join();
-            modify = true;
+            protect = true;
             threads.remove(_name);
             runnables.remove(_name);
-            modify = false;
+            protect = false;
         } catch (InterruptedException ex) {
             Logger.getLogger(ProcessManager.class.getName())
                     .log(Level.SEVERE, null, ex);

@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
-import javax.sound.sampled.Port;
 
 /**
  *
@@ -24,16 +21,12 @@ public class CommandRecognitionDaemon implements Runnable {
 
     List<CommandRecognitionListener> commandListeners = new ArrayList<>();
     List<String> commands = new ArrayList<>();
-    
-    
     public String name = "VoiceCaptureDaemon";
     private boolean terminated = false;
     private Mixer mixer;
     private List<Mixer> mixers = new ArrayList<>();
-    
     private FlacAudioRecorder recorder = new FlacAudioRecorder();
     private GoogleSpeechAPIConverter converter = new GoogleSpeechAPIConverter();
-    private boolean modify;
     private boolean protect;
 
     public void setup() {
@@ -42,21 +35,21 @@ public class CommandRecognitionDaemon implements Runnable {
     public void addCommandListener(CommandRecognitionListener l) {
         commandListeners.add(l);
     }
-    
+
     public void addCommand(String c) {
-        
-        while(protect) {
+
+        while (protect) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
                 Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        modify = true;
+        protect = true;
         commands.add(c);
-        modify = false;
+        protect = false;
     }
-    
+
     @Override
     public void run() {
 
@@ -79,7 +72,7 @@ public class CommandRecognitionDaemon implements Runnable {
             try {
                 String[] firstCommand = converter.convert(recorder.record(2000));
                 if (firstCommand != null) {
-                    while(modify) {
+                    while (protect) {
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException ex) {
@@ -87,12 +80,12 @@ public class CommandRecognitionDaemon implements Runnable {
                         }
                     }
                     protect = true;
-                    for(String command : commands) {
-                    if (firstCommand[0].equals(command)) {
-                        for(CommandRecognitionListener l : commandListeners) {
-                            l.commandRecognized(command);
+                    for (String command : commands) {
+                        if (firstCommand[0].equals(command)) {
+                            for (CommandRecognitionListener l : commandListeners) {
+                                l.commandRecognized(command);
+                            }
                         }
-                    }
                     }
                     protect = false;
                 }
@@ -113,4 +106,3 @@ public class CommandRecognitionDaemon implements Runnable {
         return name;
     }
 }
-
