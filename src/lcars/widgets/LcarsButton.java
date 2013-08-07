@@ -4,7 +4,6 @@
  */
 package lcars.widgets;
 
-import java.awt.Color;
 import javax.swing.JButton;
 
 /**
@@ -13,9 +12,11 @@ import javax.swing.JButton;
  */
 public class LcarsButton extends JButton {
     
-    public LcarsButton(String caption, String color) {
-        this.setText(caption);
-        this.setBackground(Color.red);
-    }
-    
+   public LcarsButton() {
+       this.setText("button");
+   }
+   
+   public LcarsButton(String caption) {
+       this.setText(caption);
+   }
 }
