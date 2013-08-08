@@ -22,12 +22,12 @@ public class Computer {
         processManagerThread.start();
 
         //init voice capturing daemon
-        CommandCapture voiceCapture = new CommandCapture();
+        CommandRecognitionDaemon voiceCapture = new CommandRecognitionDaemon();
         voiceCapture.setup();
         voiceCapture.addCommand("Computer");
         processManager.addThread(voiceCapture);
 
-        voiceCapture.addCommandListener(new CommandListener() {
+        voiceCapture.addCommandListener(new CommandRecognitionListener() {
             @Override
             public void commandRecognized(String command) {
                 System.out.println("Command: " + command + " recognized by Main Thread!");
@@ -35,7 +35,7 @@ public class Computer {
         });
 
         //init text to speech daemon
-        ComputerVoice voice = new ComputerVoice();
+        TextToSpeechDaemon voice = new TextToSpeechDaemon();
         processManager.addThread(voice);
 
         voice.speak("Hello World!");
