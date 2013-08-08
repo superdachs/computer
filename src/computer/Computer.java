@@ -22,7 +22,7 @@ public class Computer {
         processManagerThread.start();
 
         //init voice capturing daemon
-        CommandRecognitionDaemon voiceCapture = new CommandRecognitionDaemon();
+        VoiceControlDaemon voiceCapture = new VoiceControlDaemon();
         voiceCapture.setup();
         voiceCapture.addCommand("Computer");
         processManager.addThread(voiceCapture);

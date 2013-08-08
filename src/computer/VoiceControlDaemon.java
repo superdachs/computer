@@ -17,7 +17,7 @@ import javax.sound.sampled.Mixer;
  *
  * @author stk
  */
-public class CommandRecognitionDaemon implements Runnable {
+public class VoiceControlDaemon implements Runnable {
 
     List<CommandRecognitionListener> commandListeners = new ArrayList<>();
     List<String> commands = new ArrayList<>();
@@ -42,7 +42,7 @@ public class CommandRecognitionDaemon implements Runnable {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         protect = true;
@@ -76,7 +76,7 @@ public class CommandRecognitionDaemon implements Runnable {
                         try {
                             Thread.sleep(10);
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                     protect = true;
@@ -90,12 +90,12 @@ public class CommandRecognitionDaemon implements Runnable {
                     protect = false;
                 }
             } catch (IOException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(CommandRecognitionDaemon.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(VoiceControlDaemon.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
