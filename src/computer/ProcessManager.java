@@ -22,7 +22,7 @@ public class ProcessManager implements Runnable {
     public Boolean terminate = false;
     private HashMap<String, Thread> threads = new HashMap<>();
     private HashMap<String, Runnable> runnables = new HashMap<>();
-    private Boolean protect = true;
+    private Boolean protect = false;
     
     public void setThreadAndRunnable(Thread t) {
         threads.put(name, t);

@@ -62,6 +62,8 @@ public class GoogleSpeechAPIConverter {
             responseString += decodedString;
         }
 
+        System.out.println(responseString);
+        
         return parse(responseString);
     }
 
