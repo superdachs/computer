@@ -31,7 +31,7 @@ public class GoogleSpeechAPIConverter {
 
         String request = "https://www.google.com/"
                 + "speech-api/v1/recognize?"
-                + "xjerr=1&client=speech2text&lang=de-DE&maxresults=1";
+                + "xjerr=1&client=speech2text&lang=en-EN&maxresults=1";
 
         System.out.println("ANALYSIS STARTED");
         URL url = new URL(request);

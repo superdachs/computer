@@ -20,7 +20,7 @@ public class TextToSpeechDaemon implements Runnable {
     private String name = "VoiceDaemon";
     private List<String> buffer = new ArrayList<>();
     private final static Voice voiceKevin16 = new Voice("kevin16");
-    private boolean protect = true;
+    private boolean protect = false;
     
     @Override
     public void run() {

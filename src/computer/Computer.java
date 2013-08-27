@@ -19,7 +19,7 @@ public class Computer {
 
         
         WolframAlphaRequester requester = new WolframAlphaRequester();
-        System.out.println(requester.requestAnswer("When was Charles Darwin born?"));
+        String waanswer = requester.requestAnswer("When was Charles Darwin born?");
         
         
         
@@ -29,10 +29,14 @@ public class Computer {
         processManager.setThreadAndRunnable(processManagerThread);
         processManagerThread.start();
 
+         //init text to speech daemon
+        final TextToSpeechDaemon voice = new TextToSpeechDaemon();
+        processManager.addThread(voice);
+
         //init voice capturing daemon
-        VoiceControlDaemon voiceCapture = new VoiceControlDaemon();
+        final VoiceControlDaemon voiceCapture = new VoiceControlDaemon();
         voiceCapture.setup();
-        voiceCapture.addCommand("Computer");
+        voiceCapture.addCommand("computer");
         processManager.addThread(voiceCapture);
 
         voiceCapture.addCommandListener(new CommandRecognitionListener() {
@@ -40,22 +44,19 @@ public class Computer {
             public void commandRecognized(String command) {
                 System.out.println("Command: " + command + " recognized by Main Thread!");
                 switch (command) {
-                    case "Computer": 
+                    case "computer": 
                         System.out.println("YES?");
+                        String[] question = voiceCapture.getSentence();
+                        System.out.println(question[0]);
+                        String answer = new WolframAlphaRequester().requestAnswer(question[0]);
+                        voice.speak(answer);
                 }
             }
         });
 
 
 
-        //init text to speech daemon
-        TextToSpeechDaemon voice = new TextToSpeechDaemon();
-        processManager.addThread(voice);
-
-        voice.speak("Hello World!");
-        voice.speak("How are you?");
-        voice.speak("My name is computer!");
-
+       
         System.out.println();
         System.out.println("Computer started.");
         System.out.println("Running Threads:");
@@ -67,6 +68,6 @@ public class Computer {
     }
 
     public void initCommunication() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 }
