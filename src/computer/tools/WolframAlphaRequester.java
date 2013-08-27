@@ -4,6 +4,7 @@
  */
 package computer.tools;
 
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAException;
 import com.wolfram.alpha.WAPlainText;
@@ -11,6 +12,7 @@ import com.wolfram.alpha.WAPod;
 import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
+import computer.ConstantsImpl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +22,7 @@ import java.util.logging.Logger;
  */
 public class WolframAlphaRequester {
 
-    private static String appid = "XXXXX";
+    private static String appid = (new ConstantsImpl()).getWolframAlphaAppID();
 
     public String requestAnswer(String request) {
 

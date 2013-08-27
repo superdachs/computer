@@ -18,9 +18,9 @@ public class Computer {
     public static void main(String[] args) {
 
         
-//        WolframAlphaRequester requester = new WolframAlphaRequester();
-//        System.out.println(requester.requestAnswer("When was Charles Darwin born?"));
-//        
+        WolframAlphaRequester requester = new WolframAlphaRequester();
+        System.out.println(requester.requestAnswer("When was Charles Darwin born?"));
+        
         
         
         //init ProcessMonitor
