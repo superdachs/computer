@@ -4,6 +4,8 @@
  */
 package computer;
 
+import computer.tools.WolframAlphaRequester;
+
 /**
  *
  * @author stk
@@ -15,6 +17,12 @@ public class Computer {
      */
     public static void main(String[] args) {
 
+        
+//        WolframAlphaRequester requester = new WolframAlphaRequester();
+//        System.out.println(requester.requestAnswer("When was Charles Darwin born?"));
+//        
+        
+        
         //init ProcessMonitor
         ProcessManager processManager = new ProcessManager();
         Thread processManagerThread = new Thread(processManager);
@@ -31,10 +39,10 @@ public class Computer {
             @Override
             public void commandRecognized(String command) {
                 System.out.println("Command: " + command + " recognized by Main Thread!");
-//                switch (command) {
-//                    case "Computer": 
-//                        ;
-//                }
+                switch (command) {
+                    case "Computer": 
+                        System.out.println("YES?");
+                }
             }
         });
 
@@ -55,8 +63,6 @@ public class Computer {
             System.out.println(i + " - " + processManager.getRunningThreads().get(i));
         }
         System.out.println();
-
-
 
     }
 
